@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Service {
-    public List<Range> ranges = new ArrayList<>();
+    public final List<Range> ranges = new ArrayList<>();
 
     public void readInput(Path path) {
         try (BufferedReader br = Files.newBufferedReader(path)) {
@@ -28,10 +28,31 @@ public class Service {
         String s = Long.toString(number);
         int n = s.length();
 
-        for (int len = 1; len <= n / 2; len++) {
-            for (int i = 0; i + len <= n; i++) {
-                String minta = s.substring(i, i + len);
-                if (s.equals(minta+minta)){
+        if (n % 2 != 0) {
+            return 0L;
+        }
+        int len = n / 2;
+        String firstHalf = s.substring(0, len);
+        String secundHalf = s.substring(len);
+
+        if (firstHalf.equals(secundHalf)) {
+            return number;
+        }
+
+        return 0L;
+    }
+
+    public Long isValidMultiple(Long number) {
+        String s = Long.toString(number);
+        int n = s.length();
+        for (int len = 1; len < n; len++) {
+            if (n % len == 0) {
+                String minta = s.substring(0, len);
+                int ismetlesekSzama = n / len;
+                StringBuilder ujString = new StringBuilder();
+                ujString.append(minta.repeat(ismetlesekSzama));
+
+                if (s.contentEquals(ujString)) {
                     return number;
                 }
             }
@@ -54,7 +75,19 @@ public class Service {
         }
         return sumOfInvalidId;
     }
-    public int partTwo() {
-        return 0;
+    public long partTwo() {
+        Long sumOfInvalidId = 0L;
+        for (Range range: ranges) {
+            if (range.getStart().startsWith("0") || range.getEnd().startsWith("0") ) {
+                for (long number = Long.parseLong(range.getStart()); number <= Long.parseLong(range.getEnd()); number++) {
+                    sumOfInvalidId += number;
+                }
+            } else {
+                for (long number = Long.parseLong(range.getStart()); number <= Long.parseLong(range.getEnd()); number++) {
+                    sumOfInvalidId += isValidMultiple(number);
+                }
+            }
+        }
+        return sumOfInvalidId;
     }
 }
