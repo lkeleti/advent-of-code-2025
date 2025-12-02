@@ -25,8 +25,20 @@ public class Service {
     }
 
     public Long isValid(Long number) {
+        String s = Long.toString(number);
+        int n = s.length();
+
+        for (int len = 1; len <= n / 2; len++) {
+            for (int i = 0; i + len <= n; i++) {
+                String minta = s.substring(i, i + len);
+                if (s.equals(minta+minta)){
+                    return number;
+                }
+            }
+        }
         return 0L;
     }
+
     public long partOne() {
         Long sumOfInvalidId = 0L;
         for (Range range: ranges) {
