@@ -18,28 +18,44 @@ public class Service {
             throw new IllegalStateException("Cannot read file: " + path, ioe);
         }
     }
-    public NumPos findLargestNumber(int start, int end, String number) {
-        int maxNumber = -1;
-        int maxPosition = -1;
-        for (int i= start; i < end; i++) {
-            int defDigit = Integer.parseInt(number.substring(i,i+1));
-            if (defDigit > maxNumber ) {
-                maxNumber = defDigit;
-                maxPosition = i;
+
+    private long extractNumber(String number, int digits) {
+        StringBuilder sb = new StringBuilder();
+        int start = 0;
+
+        for (int remaining = digits; remaining > 0; remaining--) {
+            int end = number.length() - remaining + 1;
+
+            int maxDigit = -1;
+            int maxPos = -1;
+
+            for (int i = start; i < end; i++) {
+                int digit = number.charAt(i) - '0';
+                if (digit > maxDigit) {
+                    maxDigit = digit;
+                    maxPos = i;
+                }
             }
+
+            sb.append(maxDigit);
+            start = maxPos + 1;
         }
-        return new NumPos(maxNumber,maxPosition);
+        return Long.parseLong(sb.toString());
     }
+
     public long partOne() {
-        Long sumOfNumbers = 0L;
-        for (String number: numbers) {
-            NumPos first = findLargestNumber(0, number.length() - 1, number);
-            NumPos secund = findLargestNumber(first.getPosition() + 1, number.length(), number);
-            sumOfNumbers += (first.getNumber() * 10L) + secund.getNumber();
+        long sum = 0;
+        for (String number : numbers) {
+            sum += extractNumber(number, 2);
         }
-        return sumOfNumbers;
+        return sum;
     }
-    public int partTwo() {
-        return 0;
+
+    public long partTwo() {
+        long sum = 0;
+        for (String number : numbers) {
+            sum += extractNumber(number, 12);
+        }
+        return sum;
     }
 }
