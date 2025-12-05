@@ -29,35 +29,19 @@ public class Chord {
 
     public List<Chord> getNeighbours(Chord max) {
         List<Chord> neighbours = new ArrayList<>();
-        if (getPosX() - 1 >= 0) {
-            neighbours.add(new Chord(getPosX()-1, getPosY()));
-            if (getPosY() - 1 >= 0) {
-                neighbours.add(new Chord(getPosX()-1, getPosY()-1));
-            }
+        int[] dx = {-1, -1, -1, 0, 0, 1, 1, 1};
+        int[] dy = {-1, 0, 1, -1, 1, -1, 0, 1};
 
-            if (getPosY() + 1 <= max.getPosY()) {
-                neighbours.add(new Chord(getPosX()-1, getPosY()+1));
-            }
-        }
+        for (int i = 0; i < 8; i++) {
+            int nx = posX + dx[i];
+            int ny = posY + dy[i];
 
-        if (getPosX() + 1 <= max.getPosX()) {
-            neighbours.add(new Chord(getPosX()+1, getPosY()));
-            if (getPosY() - 1 >= 0) {
-                neighbours.add(new Chord(getPosX()+1, getPosY()-1));
-            }
-
-            if (getPosY() + 1 <= max.getPosY()) {
-                neighbours.add(new Chord(getPosX()+1, getPosY()+1));
+            if (nx >= 0 && nx < max.getPosX() &&
+                    ny >= 0 && ny < max.getPosY()) {
+                neighbours.add(new Chord(nx, ny));
             }
         }
 
-        if (getPosY() - 1 >= 0) {
-            neighbours.add(new Chord(getPosX(), getPosY()-1));
-        }
-
-        if (getPosY() + 1 <= max.getPosY()) {
-            neighbours.add(new Chord(getPosX(), getPosY()+1));
-        }
         return neighbours;
     }
 
